@@ -1,0 +1,78 @@
+compilation-unit = package, package-path, nl, package-code |
+                   test, package, package-path, nl, test-package-code |
+                   main, package, package-path, nl, main-package-code ;
+
+test = "test" ;
+
+main = "main" ;
+
+package = "package" ;
+
+package-path = basic-alphanumeric-sequence, { ".", basic-alphanumeric-sequence } ;
+
+basic-alphanumeric-sequence = { basic-alphanumeric-character } , basic-alpha-character ;
+
+basic-alpha-character = a-to-f | g-z | "_" ;
+
+g-z = "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" |
+      "v" | "w" | "x" | "y" | "z" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "o" | "P" | 
+      "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" ;
+
+basic-alphanumeric-character = basic-alpha-character | decimal-digit ;
+
+nl = "\0A" ;
+
+(***********************)
+(* Integer definitions *)
+(***********************)
+integer = [integer-magnitude-definition], integer-type-and-number ;
+
+integer-magnitude-definition = byte | ubyte | short | ushort | int | uint | long | ulong ;
+
+integer-type-and-number = hex, hex-number |
+                          octal, octal-number |
+                          bin, binary-number |
+                          decimal-number ;
+
+hex = "hex" ;
+
+octal = "octal" ;
+
+bin = "bin" ;
+
+hex-number = zero | [ "-" ], hex-digit-excluding-zero, { hex-digit } ;
+             
+octal-number = zero | [ "-" ], octal-digit-excluding-zero, { octal-digit } ;
+             
+binary-number = zero | [ "-" ], one, { binary-digit } ;
+
+decimal-number = zero | [ "-" ], decimal-digit-excluding-zero, { decimal-digit } ;
+             
+hex-digit-excluding-zero = decimal-digit-excluding-zero | a-to-f ;
+
+hex-digit = zero | hex-digit-excluding-zero ;
+
+decimal-digit-excluding-zero = octal-digit-excluding-zero | "8" | "9" ;
+
+decimal-digit = zero | decimal-digit-excluding-zero ;
+
+octal-digit-excluding-zero = one | "2" | "3" | "4" | "5" | "6" | "7" ;
+
+octal-digit = zero | octal-digit-excluding-zero ;
+
+binary-digit = zero | one ;
+
+zero = "0" ;
+
+one = "1" ;
+
+a-to-f = "a" | "b" | "c" | "d" | "e" | "f" | "A" | "B" | "C" | "D" | "E" | "F" ;
+
+(*************************************)
+(* Floating point number definitions *)
+(*************************************)
+floating-point-number = [ floating-point-magnitude-definition ], point-number ;
+
+floating-point-magnitude-definition = float | double ;
+
+point-number = decimal-number, [ ".", decimal-digit, { decimal-digit } ], [ ( "E" | "e" ), decimal-number ]

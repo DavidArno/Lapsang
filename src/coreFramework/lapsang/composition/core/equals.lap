@@ -1,0 +1,34 @@
+package lapsang.composition.core
+    uses lapsang.builtin.isNull
+    uses lapsang.builtin.sameInstance
+    uses lapsang.builtin.sameEnumType
+    uses lapsang.builtin.sameString
+    uses lapsang.builtin.equalPrimitiveValues
+    
+    public component bool equals(function this, object that)
+        return that is function && signaturesMatch(this, that)
+    
+    public component bool equals(value this, object that)
+        return false if !(that is value)
+
+        val propertyDifferences = this%properties.asSet \ that%properties.asSet
+        return false if propertyDifferences.length != 0 else
+               this%properties.asList.every(prop => prop.safeValue == that%properties[prop%name].safeValue)
+               
+    public component bool equals(mutableValue this, object that)
+        return that is mutableValue && sameInstance(this, that)
+        
+    public component bool equals(nullableValue this, object that)
+        return that is nullableValue && (bothNull(this, that) || sameInstance(this, that))
+
+    public component bool equals(primitive this, object that)
+        return that is primitive && equalPrimitiveValues(this, that)
+
+    public component bool equals(enumValue this, object that)
+        return that is primitive && sameEnumType(this, that) && this.index == that.index
+
+    public component bool equals(string this, string that)
+        return that is string && sameString(this, that)
+    
+    private bool bothNull(nullableValue this, nullableValue that)
+        return isNull(this) && isNull(that)

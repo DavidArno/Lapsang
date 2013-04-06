@@ -1,0 +1,3 @@
+/// object is the base type for all types within Lapsang.
+package lapsang.builtin.typedefs
+    public builtin typedef object

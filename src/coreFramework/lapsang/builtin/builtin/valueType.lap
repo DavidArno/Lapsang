@@ -1,0 +1,12 @@
+package lapsang.builtIn
+    // Extends the metadata type interface, {type}, in order to describe the additional metadata 
+    //of a value type.
+    public interface valueType extends type inferred default
+        // True if the type is a primitive type (int, bool, an enum etc)
+        val bool isPrimitive
+        // True if values of the type have state that can change and/or the methods can have side effects
+        val bool isMutable
+        // The properties belonging to the type
+        val list<propertyDetails> properties
+        // The methods defined by the interface fro this type (won't include composed methods)
+        val list<functionType> methods

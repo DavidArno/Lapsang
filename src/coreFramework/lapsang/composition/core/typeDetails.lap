@@ -1,0 +1,4 @@
+﻿package lapsang.composition.core
+
+    public component valueType typeDetails<value> exclude lapsang.builtin.type
+    

@@ -1,0 +1,7 @@
+﻿package lapsang.builtIn
+    public val string setterSafeValue = "<<Setter>>"
+    public val string mutableSafeValue = "<<Mutable>>"
+    
+    public interface propertyDetails inferred default
+        val list<accessorType> accessors
+        val value safeValue

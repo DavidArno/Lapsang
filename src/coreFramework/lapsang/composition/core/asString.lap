@@ -1,0 +1,49 @@
+package lapsang.composition.core
+    uses lapsang.strings.string
+    uses lapsang.strings.joinString
+    uses lapsang.strings.stringFormat
+    uses lapsang.builtin.primitiveToString
+    
+    //
+    // This version of asString is applied to any function that doesn't supply its own
+    // asString implementation.
+    //
+    // Returns a string of the form <return type> <function name>(<type> <name>, ...)
+    //
+    public component string asString(function this)
+        val parameters = joinString(", ", this%parameters, 
+                                    p => stringFormat("%1=%2", p%name, p.name))
+        return stringFormat("%1 %2(%)", this%name, this.name, parameters)
+
+    //
+    // This version of asString is applied to any value that doesn't supply its own version.
+    //
+    // Returns a string representation of the value, of the form <type name>: <prop1>=<value1>, ...
+    //
+    public component string asString(value this)
+        val properties = joinString(", ", this%properties, 
+                                    p => stringFormat("%1=%2", p%name, propertyValueAsString(p)))
+        return stringFormat "%1: %2", this%name, properties
+
+    //
+    // asString for ints and floats. Uses the builtin conversion function to perform the conversion.
+    //
+    public component string asString(primitive this)
+        return primitiveToString(this)
+
+    //
+    // asString for enums. All enums are decorated with a values component, which is an array of
+    // strings, indexed with the enum values.
+    //
+    public component string asString(enum this)
+        return this.values[this]
+        
+    //
+    // The string representation of a string is itself.
+    //
+    public component string asString(string this) 
+        return this
+
+    private string propertyValueAsString(propertyDetails prop)
+        val startBracket, closeBracket = ["", ""] if prop%isPrimative else ["[", "]"]
+        return stringFormat "%1%2%3", startBracket, prop.safeValue, closeBracket
