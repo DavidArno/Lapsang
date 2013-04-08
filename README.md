@@ -14,7 +14,8 @@ Lapsang really only exists as a concept language. The syntax is poorly defined (
 ### Reading more about Lapsang ###
 I've written a series of blog posts on Lapsang:
 
-- [http://www.davidarno.org/2012/12/03/lapsang-does-the-world-need-yet-another-programming-language/](http://www.davidarno.org/2012/12/03/lapsang-does-the-world-need-yet-another-programming-language/ "Lapsang: does the world need yet another programming language? ")
-- [http://www.davidarno.org/2013/01/16/lapsang-design-to-interfaces-and-dependency-injection-language-features/](http://www.davidarno.org/2013/01/16/lapsang-design-to-interfaces-and-dependency-injection-language-features/ " Lapsang: “design to interfaces” and “dependency injection” language features ")
+- [Lapsang: does the world need yet another programming language?](http://www.davidarno.org/2012/12/03/lapsang-does-the-world-need-yet-another-programming-language/)
+
+[http://www.davidarno.org/2013/01/16/lapsang-design-to-interfaces-and-dependency-injection-language-features/](http://www.davidarno.org/2013/01/16/lapsang-design-to-interfaces-and-dependency-injection-language-features/ " Lapsang: “design to interfaces” and “dependency injection” language features ")
 - [http://www.davidarno.org/2013/01/25/testing-with-lapsang/](http://www.davidarno.org/2013/01/25/testing-with-lapsang/ "Testing with Lapsang")
 - [http://www.davidarno.org/2013/02/25/how-lapsang-avoids-two-common-forms-of-explicit-casting/](http://www.davidarno.org/2013/02/25/how-lapsang-avoids-two-common-forms-of-explicit-casting/ "How Lapsang avoids two common forms of explicit casting")

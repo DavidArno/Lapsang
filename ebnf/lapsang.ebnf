@@ -1,6 +1,12 @@
-compilation-unit = package, package-path, nl, package-code |
-                   test, package, package-path, nl, test-package-code |
-                   main, package, package-path, nl, main-package-code ;
+#
+# EBNF syntax is compliant with the somewhat unorthodox version supported by
+# http://www.icosaedro.it/bnf_chk/bnf_chk-on-line.html. This let's me validate it,
+# but has the huge disadvantage of not supported UTF-8. Having even basic validation
+# wins out at this time though.
+#
+compilation_unit = ( package dot_separated_path nl package_code ) |
+                   ( test package dot_separated_path nl test_package_code ) |
+                   ( main package dot_separated_path nl main_package_code ) ;
 
 test = "test" ;
 
@@ -8,31 +14,43 @@ main = "main" ;
 
 package = "package" ;
 
-package-path = basic-alphanumeric-sequence, { ".", basic-alphanumeric-sequence } ;
+dot_separated_path = basic_alphanumeric_sequence { "." basic_alphanumeric_sequence } ;
 
-basic-alphanumeric-sequence = { basic-alphanumeric-character } , basic-alpha-character ;
+basic_alphanumeric_sequence = { basic_alphanumeric_character } basic_alpha_character ;
 
-basic-alpha-character = a-to-f | g-z | "_" ;
+basic_alpha_character = a_to_f | g_z | "_" ;
 
-g-z = "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" |
-      "v" | "w" | "x" | "y" | "z" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "o" | "P" | 
-      "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" ;
+g_z = "g" .. "z" | "G" .. "Z" ;
 
-basic-alphanumeric-character = basic-alpha-character | decimal-digit ;
+basic_alphanumeric_character = basic_alpha_character | decimal_digit ;
 
-nl = "\0A" ;
+nl = "\x0A" ;
 
-(***********************)
-(* Integer definitions *)
-(***********************)
-integer = [integer-magnitude-definition], integer-type-and-number ;
+#****************
+#* Package code *
+#****************
+package_code = { using_statement } definition_block { definition_block } ;
 
-integer-magnitude-definition = byte | ubyte | short | ushort | int | uint | long | ulong ;
+using_statement = using dot_separated_path { "," dot_separated_path } nl ;
 
-integer-type-and-number = hex, hex-number |
-                          octal, octal-number |
-                          bin, binary-number |
-                          decimal-number ;
+definition_block = builtin_function ; # needs expanding
+
+builtin_function = access_modifier builtin dot_separated_path 
+                   basic_alphanumeric_sequence function_parameter_list ;
+
+access_modifier = "public" | "private" | "internal" ; 
+
+#***********************
+#* Integer definitions *
+#***********************
+integer = [integer_magnitude_definition] integer_type_and_number ;
+
+integer_magnitude_definition = byte | ubyte | short | ushort | int | uint | long | ulong ;
+
+integer_type_and_number = hex hex_number |
+                          octal octal_number |
+                          bin binary_number |
+                          decimal_number ;
 
 hex = "hex" ;
 
@@ -40,39 +58,39 @@ octal = "octal" ;
 
 bin = "bin" ;
 
-hex-number = zero | [ "-" ], hex-digit-excluding-zero, { hex-digit } ;
+hex_number = zero | [ "_" ] hex_digit_excluding_zero { hex_digit } ;
              
-octal-number = zero | [ "-" ], octal-digit-excluding-zero, { octal-digit } ;
+octal_number = zero | [ "_" ] octal_digit_excluding_zero { octal_digit } ;
              
-binary-number = zero | [ "-" ], one, { binary-digit } ;
+binary_number = zero | [ "_" ] one { binary_digit } ;
 
-decimal-number = zero | [ "-" ], decimal-digit-excluding-zero, { decimal-digit } ;
+decimal_number = zero | [ "_" ] decimal_digit_excluding_zero { decimal_digit } ;
              
-hex-digit-excluding-zero = decimal-digit-excluding-zero | a-to-f ;
+hex_digit_excluding_zero = decimal_digit_excluding_zero | a_to_f ;
 
-hex-digit = zero | hex-digit-excluding-zero ;
+hex_digit = zero | hex_digit_excluding_zero ;
 
-decimal-digit-excluding-zero = octal-digit-excluding-zero | "8" | "9" ;
+decimal_digit_excluding_zero = octal_digit_excluding_zero | "8" | "9" ;
 
-decimal-digit = zero | decimal-digit-excluding-zero ;
+decimal_digit = zero | decimal_digit_excluding_zero ;
 
-octal-digit-excluding-zero = one | "2" | "3" | "4" | "5" | "6" | "7" ;
+octal_digit_excluding_zero = one | "2" .. "7" ;
 
-octal-digit = zero | octal-digit-excluding-zero ;
+octal_digit = zero | octal_digit_excluding_zero ;
 
-binary-digit = zero | one ;
+binary_digit = zero | one ;
 
 zero = "0" ;
 
 one = "1" ;
 
-a-to-f = "a" | "b" | "c" | "d" | "e" | "f" | "A" | "B" | "C" | "D" | "E" | "F" ;
+a_to_f = "a" .. "f" | "A" .. "F" ;
 
-(*************************************)
-(* Floating point number definitions *)
-(*************************************)
-floating-point-number = [ floating-point-magnitude-definition ], point-number ;
+#*************************************
+#* Floating point number definitions *
+#*************************************
+floating_point_number = [ floating_point_magnitude_definition ] point_number ;
 
-floating-point-magnitude-definition = float | double ;
+floating_point_magnitude_definition = float | double ;
 
-point-number = decimal-number, [ ".", decimal-digit, { decimal-digit } ], [ ( "E" | "e" ), decimal-number ]
+point_number = decimal_number [ "." decimal_digit { decimal_digit } ] [ ( "E" | "e" ) decimal_number ] ;
