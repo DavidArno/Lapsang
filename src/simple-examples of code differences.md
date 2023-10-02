@@ -13,9 +13,9 @@ foreach (string name in names)
 ```lapsang
 val names = {{"John", "Tom", "Peter"}};
 foreach val name in names {
-    if name == "Tom" { continue; }
+    if (name == "Tom") continue;
     Console.WriteLine(name);
-}
+};
 ```
 
 ```cs
@@ -38,27 +38,27 @@ switch (i)
 
 ```lapsang
 val i = 1;
-i switch {
-    1 => { Console.WriteLine("One"); },
-    2 => {
+i switch (
+    (1) { Console.WriteLine("One"); }
+    (2) {
         Console.WriteLine("Two");
         Console.WriteLine("Two");
-    },
-    _ => { Console.WriteLine("Other"); }
-}
+    }
+    (_) { Console.WriteLine("Other"); }
+);
 ```
 
 ```cs
 int time = 22;
-if (time < 10) 
+if (time < 10)
 {
   Console.WriteLine("Good morning.");
-} 
-else if (time < 20) 
+}
+else if (time < 20)
 {
   Console.WriteLine("Good day.");
-} 
-else 
+}
+else
 {
   Console.WriteLine("Good evening.");
 }
@@ -67,24 +67,18 @@ else
 ```lapsang
 // V1
 val time = 22;
-time switch {
-    < 10 => { Console.WriteLine("Good morning."); },
-    < 20 => { Console.WriteLine("Good day."); },
-    _ => { Console.WriteLine("Good evening."); }
-}
+time switch (
+    (< 10) { Console.WriteLine("Good morning."); }
+    (< 20) { Console.WriteLine("Good day."); }
+    (_) { Console.WriteLine("Good evening."); }
+);
 
 // V2
 // Following the "only one way" principle, this will warn that switch should be used instead
 val time = 22;
-if time < 10 {
-    Console.WriteLine("Good morning.");
-}
-elif time < 20 {
-    Console.WriteLine("Good day.");
-}
-else {
-    Console.WriteLine("Good evening.");
-}
+if (time < 10) { Console.WriteLine("Good morning."); }
+elseif (time < 20) { Console.WriteLine("Good day."); }
+else { Console.WriteLine("Good evening."); };
 ```
 
 ```cs
@@ -94,8 +88,8 @@ Console.WriteLine(result);
 ```
 
 ```lapsang
-int time = 20;
-val result = if time < 18 => "Good day." else => "Good evening.";
+val time = 20;
+val result = if (time < 18) "Good day." else "Good evening.";
 Console.WriteLine(result);
 ```
 
@@ -109,13 +103,11 @@ teenStudentsName.ToList().ForEach(s => Console.WriteLine(s.StudentName));
 
 ```lapsang
 val teenStudentsName = foreach val s in studentList {
-    if s.age <= 12 or >= 20 { continue; }
-    (studentName: s.StudentName,)
-}
+    if (s.age <= 12 or >= 20) continue
+    (s.StudentName,)
+};
 
-foreach val s in teenStudentsName {
-    Console.WriteLine(s.StudentName);
-}
+foreach student in teenStudentsName { Console.WriteLine(student.StudentName); };
 ```
 
 
@@ -147,16 +139,14 @@ public int Value
 ```
 
 ```lapsang
-public int Value {
+public int Value (
     get => try { DoSomething(); field } catch {}
-    set => try { 
-        DoSomething();
-        field = value;
-    }
-    catch Exception e {
-        Console.WriteLine($"Setting value {value} gave error {e}");
-    }
-}
+    set =>
+        try { DoSomething(); field = value; }
+        catch (Exception e) {
+            Console.WriteLine($"Setting value {value} gave error {e}");
+        }
+)
 ```
 
 ```cs
@@ -171,18 +161,37 @@ public int GetIncrementedValue()
     catch (OverflowException e)
     {
         Console.WriteLine(e);
+        throw;
     }
 }
 
 ```
+
 ```lapsang
 mut int Val;
 
-public int GetIncrementedValue() 
-    => try => Val += 10 catch OverflowException e {
-        Console.WriteLine(e);
-    }
+public int GetIncrementedValue() =>
+    try Val += 10 catch (OverflowException e) { Console.WriteLine(e); throw }
+```
 
+```cs
+public uint GetUnsafeIncrementedValue(uint i)
+{
+    try
+    {
+        return i + 1;
+    }
+    catch (OverflowException e)
+    {
+        return 0;
+    }
+}
+
+```
+
+```lapsang
+public uint GetUnsafeIncrementedValue(uint i) =>
+    try i + 1 catch (OverflowException) 0
 ```
 
 
@@ -216,7 +225,7 @@ static List<string> SystemUnderTest(int n)
 ```
 
 ```lapsang
-static string CreateRow(int N, int Offset) {
+static string CreateRow(int N, int Offset) => {
     const PatternTemplate =
         "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" +
         "987654321098765432109876543210987654321098765432109876543210987654321098765432109876543210987654321";
@@ -229,29 +238,55 @@ static string CreateRow(int N, int Offset) {
 }
 
 // V1
-static List<string> SystemUnderTest(int N) {
+static List<string> SystemUnderTest(int N) => {
     val rows = N * 2 - 1;
 
-    foreach val i in 0 .. rows {
-        val offset = if i < N => N - i - 1 else => i - N + 1;
+    foreach i in (0 .. rows) {
+        val offset = if (i < N) N - i - 1 else i - N + 1;
         CreateRow(N, offset)
-    }.ToList();
+    }.ToList()
 }
 
 // V2
-static List<string> SystemUnderTest(int N) {
-    val rows = N * 2 - 1;
+static List<string> SystemUnderTest(int N) =>
+    (foreach i in (0 .. N * 2 - 1) CreateRow(N, if (i < N) N - i - 1 else i - N + 1)).ToList()
+```
 
-    (foreach val i in 0 .. rows => CreateRow(N, if i < N => N - i - 1 else => i - N + 1)).ToList();
+```cs
+try
+{
+    Console.WriteLine(Divide(10, 10));
 }
-
-
-// V3
-static List<string> SystemUnderTest(int N) {
-    val rows = N * 2 - 1;
-
-    foreach val i in 0 .. rows { 
-        CreateRow(N, if i < N => N - i - 1 else => i - N + 1) 
-    }.ToList();
+catch (MyException e) when (e.Message.Contains("awkward"))
+{
+    Console.WriteLine($"Well this is not what I expected: {e.Message}");
 }
+catch (MyException e) when (e.Message.Contains("exactly"))
+{
+    Console.WriteLine($"Well something else has happened: {e.Message}");
+}
+catch (Exception e)
+{
+    Console.WriteLine($"This was not really handled!");
+}
+finally
+{
+    Console.WriteLine("I'm gonna be executed anyway!");
+}
+```
+
+```lapsang
+try { Console.WriteLine(Divide(10, 10)); }
+catch (
+    (MyException e when e.Message.Contains("awkward")) {
+        Console.WriteLine($"Well this is not what I expected: {e.Message}");
+    }
+    (MyException e when e.Message.Contains("exactly")) {
+        Console.WriteLine($"Well something else has happened: {e.Message}");
+    }
+    (Exception e) {
+        Console.WriteLine($"This was not really handled!");
+    }
+)
+finally { Console.WriteLine("I'm gonna be executed anyway!"); }
 ```
