@@ -1,7 +1,0 @@
-// By default, values are immutable in Lapsang. However, at times, it makes
-// sense to enable a value to hold state, and thus be able to change over
-// time. Likewise, some methods have to cause side effects to interact with 
-// the world outside the application. Such mutable values can be specifically 
-// composed via the mutableValue typedef.
-package lapsang.builtin.typedefs
-    public builtin typedef mutableValue extends value

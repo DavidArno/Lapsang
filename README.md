@@ -1,21 +1,27 @@
 ## The Lapsang Programming Language ##
-Lapsang is a concept language,which seeks to build a range of modern language "best practices" in to the core language, rather than them existing only as add-on frameworks.
+Lapsang is very much a thought experiment language for me. It's existed for a decade, but in many forms as my tastes, experience and current usage of languages has changed.
 
-### Core "best practice" language features ###
-- For a unit of Lapsang code to compile, it must be tested. What this means in practice is that unit tests have to be a fundamental feature of the language, rather than a framework library that the code compiles against. The compiler runs the tests and profiles the code. Failed tests, or code not covered by those tests, are then both treated as compiler errors.
-- Lapsang mandates design to interfaces. To give an example of how thoroughly it mandates this pattern, code (outside of tests) cannot create an instance of another class, it must create an instance of an interface. Dependency injection is used to provide the desired class, that implements that interface, to that code at compile time/runtime.
-- Lapsang supports classes, but doesn’t allow inheritance. Instead, composition is king. Any object (which includes interface references, functions and primitives) can have components added to it, even at runtime. Again, this pattern is baked into the language: Inversion of control/entity frameworks are not required to set up composed objects, at least at a basic level.
-- Lapsang supports structured typing. This means that classes (and primitives and functions) do not need to pre-declare that they implement interfaces. Instead they implicitly implement an interface if they satisfy that interface’s contract.
-- Lapsang encourages the use of immutable data types and functions/methods without side effects. Mutability is allowed, in recognition of the fact that its an essential feature at times, but such code has to be explicitly annotated as unsafe.
+This current incarnation is based on the idea of a "rebooted C#". It takes the current set of features as of C#11, plus ideas that are coming in C# 12. It then turns the language on its head turning it into a "pit of success" language:
 
-### Where's the compiler? ###
-Lapsang really only exists as a concept language. The syntax is poorly defined (see the far-from-complete /ebnf/language.ebnf file for details) and there are a few half-written core framework files (beneath /coreFramework). That's it at present.
+1. Having two ways of doing the same thing is actively avoided. For example, the `private` keyword is dropped. Members of a class or struct are private by default. Therefore using the optional `private` keyword just adds noise to the code. The other option here would have been to make it mandatory, but where sensible, brevity is favoured over "noisy" explicit clarification in Lapsang.
+2. All classes are sealed by default. 
+3. Numeric actions are checked by default. Therefore the `checked` keyword is dropped. `unchecked` must be used when unchecked arithmetic is required.
+4. Fields and parameters are immutable by default.
+5. Local variables are either immutable by default (if an explicit type is specified), or mutable and immutable declarations are available (`mut x = 1;` results in a mutable variable; `val x = 1;` results in an immutable one).
+6. Static classes are replaced by modules. A module can only contain static functions, but there is no need to specify `static` everywhere.
+7. Static scope is forbidden. It is not possible to define a static field.
+8. All fields are private. 
 
-### Reading more about Lapsang ###
-I've written a series of blog posts on Lapsang:
+In addition to the above changes, inconsistencies in the language are addressed:
 
-- [Lapsang: does the world need yet another programming language?](http://www.davidarno.org/2012/12/03/lapsang-does-the-world-need-yet-another-programming-language/)
+9. As well as supporting exclusive ranges (`1 .. 10` being values 1-9), inclusive ranges are also supported of the form `1 to 9`. `1 to 9 step 2` style ranges are also supported. These inclusive ranges can be used with `foreach`. As such, the basic for loop is not supported (only one way of doing things).
+10. Expressions and statements are handled very differently to C# to create better consistency. `{ ... }` - except when used for type declarations - denotes an expression block. An expression block consists of a set of statements, separated by `;`. Optionally, an expression - either of a simple form (eg `x + y` or `x == y`) or another expression block - can be specified after the last `;`. The value of that last expression is then the return value of the expression block. If there is no expression after the last `;` then it is treated as a "void expression block". In keeping with the "only one way of doing things" approach, `return` cannot be used as a last statement in an expression block.
+11. As a side effect of point 10, `{{` is not permitted syntax. This allows it to be reserved for future use.
 
-[http://www.davidarno.org/2013/01/16/lapsang-design-to-interfaces-and-dependency-injection-language-features/](http://www.davidarno.org/2013/01/16/lapsang-design-to-interfaces-and-dependency-injection-language-features/ " Lapsang: “design to interfaces” and “dependency injection” language features ")
-- [http://www.davidarno.org/2013/01/25/testing-with-lapsang/](http://www.davidarno.org/2013/01/25/testing-with-lapsang/ "Testing with Lapsang")
-- [http://www.davidarno.org/2013/02/25/how-lapsang-avoids-two-common-forms-of-explicit-casting/](http://www.davidarno.org/2013/02/25/how-lapsang-avoids-two-common-forms-of-explicit-casting/ "How Lapsang avoids two common forms of explicit casting")
+Other aspects of the language are hugely changed. This especially applies to constants, structs and the use of `readonly`:
+11.  
+12. Constants are completely reimagined.
+
+Not sure where to put yet:
+ - no ternary operator. Use if/else or switch
+ - favour switch over if/else

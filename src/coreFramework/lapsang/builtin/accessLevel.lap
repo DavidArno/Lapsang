@@ -1,7 +1,0 @@
-package lapsang.builtin
-    // Provides a set of values that correspond to the public, internal and private 
-    // access modifiers. These are used by {type} to report a type's access modifier. 
-    public enum accessLevel:
-        publiclyAccessible,
-        internalToLibrary,
-        privateToValue

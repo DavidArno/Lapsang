@@ -1,6 +1,0 @@
-package lapsang.core.compoundReturnTypes
-
-// Not sure about this one. Given that fallible<T> will have syntactic sugar
-// syntax associated with it, how can this work?
-public interface fallibleSuccess<T> auto default
-    {{ success<T> | exception }} result

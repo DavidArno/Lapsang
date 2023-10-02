@@ -1,8 +1,0 @@
-﻿//
-// lapsang.composition.core defines the set of composition methods applied at the most basic
-// level to all values.
-//
-// The supplied composition methods are asString(), equals(), is() and has(). The latter three are
-// required by the compiler, as they are used to support x == y, x is y and x has y reprectively.
-// 
-package lapsang.composition.core
