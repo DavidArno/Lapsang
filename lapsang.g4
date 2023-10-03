@@ -6,12 +6,55 @@ expression
    ;
 
 block_expression
-   : '{' terminated_statement+ value_expression? '}'
+   : '{' terminated_statement+ non_block_expression? '}'
    ;
 
 non_block_expression
-   : value_expression
-   | void_expression
+   : PLACE_HOLDER
+  // : anonymous_function_expression
+  // | anonymous_object_creation_expression
+  // | array_creation_expression
+  // | await_expression
+  // | base_object_creation_expression
+  // | binary_expression
+  // | cast_expression
+  // | checked_expression
+  // | collection_expression
+  // | conditional_access_expression
+  // | conditional_expression
+  // | declaration_expression
+  // | default_expression
+  // | element_access_expression
+  // | element_binding_expression
+  // | implicit_array_creation_expression
+  // | implicit_element_access
+  // | implicit_stack_alloc_array_creation_expression
+  // | initializer_expression
+  // | instance_expression
+  // | interpolated_string_expression
+  // | invocation_expression
+  // | is_pattern_expression
+  // | literal_expression
+  // | make_ref_expression
+  // | member_access_expression
+  // | member_binding_expression
+  // | omitted_array_size_expression
+  // | parenthesized_expression
+  // | postfix_unary_expression
+  // | prefix_unary_expression
+  // | query_expression
+  // | range_expression
+  // | ref_expression
+  // | ref_type_expression
+  // | ref_value_expression
+  // | size_of_expression
+  // | stack_alloc_array_creation_expression
+  // | switch_expression
+  // | throw_expression
+  // | tuple_expression
+  // | type
+  // | type_of_expression
+  // | with_expression
    ;
 
 terminated_statement
@@ -19,32 +62,35 @@ terminated_statement
    ;
 
 statement
-   : void_expression
+   : mutable_assignment
    | declaration
 //   | mutable_assignment
    | discarded_assignment
    ;
 
+mutable_assignment
+  : assignment_lhs assignment_operator expression
+  ;
 
-// mutable_assignment
-// 	: _unary_expression_ assignment_operator value_expression
-// 	| _unary_expression_ '??=' throwable_expression
-// 	;
+assignment_lhs
+  : PLACE_HOLDER
+  ;
 
 assignment_operator
-	: '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>='
+	: '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>='| '>>>=' | '??='
 	;
 
+discarded_assignment
+   : DISCARD '=' expression
+   ;
+
 return_statement
-   : RETURN value_expression?
+   : RETURN expression?
    ;
 
 declaration
-   : val_or_mut type_identifier variable ('=' value_expression)?
-   ;
-
-discarded_assignment
-   : DISCARD '=' value_expression
+   : MUT type_identifier variable_declaration ('=' expression)?
+   | (VAL | type_identifier) variable_declaration '=' expression
    ;
 
 is_pattern_expression
@@ -180,11 +226,6 @@ when_clause
   : 'when' expression
   ;
 
-val_or_mut
-   : VAL
-   | MUT
-   ;
-
 boolean_literal
     : TRUE
     | FALSE
@@ -223,6 +264,10 @@ hexadecimal_digit
 
 binary_integer_literal
     : '0B' binary_digit decorated_binary_digit*
+    ;
+
+PLACE_HOLDER
+    : '0'
     ;
 
 decorated_binary_digit

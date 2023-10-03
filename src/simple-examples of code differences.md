@@ -290,3 +290,11 @@ catch (
 )
 finally { Console.WriteLine("I'm gonna be executed anyway!"); }
 ```
+
+```cs
+private void PrintHello() => Console.WriteLine("Hello, world");
+```
+
+```lapsang
+void PrintHello() => { Console.WriteLine("Hello, world"); }
+```

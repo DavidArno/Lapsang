@@ -58,7 +58,7 @@
 | let | not needed | Linq query language not being replicated |
 | lock | not thought about yet | |
 | long | long | |
-| managed | | |
+| managed | not thought about yet | |
 | nameof | not thought about yet | |
 | namespace | namespace, maybe | Could make this part of the type name? |
 | new | new | |
@@ -72,25 +72,25 @@
 | operator | not thought about yet| |
 | or | or? | Pattern keywords need thinking about |
 | orderby | not needed | Linq query language not being replicated |
-|out|||
-|override|||
-|params|||
-|partial|||
-|private|||
-|protected|||
-|public|||
-|readonly|||
-|record|||
-|ref|||
-|remove|||
-|required|||
-|return|||
-|sbyte|||
-|scoped|||
-|sealed|||
-|select|||
-|set|||
-|short|||
+| out| not thought about yet | would love to ditch it, but it'll be needed probably |
+| override | not thought about yet | would love to ditch it, but it'll be needed probably ||
+| params | not thought about yet | |
+| partial| not thought about yet | would love to ditch it, but it'll be needed probably |
+| private | not needed | private by default so just noise. Ditch it |
+| protected | not thought about yet | would love to ditch it, but it'll be needed probably |
+| public | public | |
+| readonly | mut | things will be readonly by default so a `mut` keyword will be needed for not read-only |
+| record | record, probably, maybe | |
+| ref |not thought about yet | |
+| remove | not needed | Custom event stuff. Not needed |
+| required | not thought about yet | all part of the initialisation mess. Needs a real rethink |
+| return | return | Only needed as a statement as expression blocks return the end value |
+| sbyte | sbyte | ubyte and sbyte. Dropping the s on the latter will confuse people |
+| scoped | not thought about yet | |
+| sealed | inheritable | all classes will be sealed by default so just need a way of saying "not sealed" |
+| select | not needed | Linq query language not being replicated |
+| set | set | |
+| short | short | |
 |sizeof|||
 |stackalloc|||
 |static|||
