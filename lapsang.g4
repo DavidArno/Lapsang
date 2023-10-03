@@ -21,15 +21,15 @@ terminated_statement
 statement
    : void_expression
    | declaration
-   | mutable_assignment
+//   | mutable_assignment
    | discarded_assignment
    ;
 
 
-mutable_assignment
-	: _unary_expression_ assignment_operator value_expression
-	| _unary_expression_ '??=' throwable_expression
-	;
+// mutable_assignment
+// 	: _unary_expression_ assignment_operator value_expression
+// 	| _unary_expression_ '??=' throwable_expression
+// 	;
 
 assignment_operator
 	: '=' | '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>='
@@ -232,7 +232,7 @@ decorated_binary_digit
 binary_digit
     : '0' | '1'
     ;
-    
+
 DISCARD
    : '_'
    ;
