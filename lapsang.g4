@@ -1,12 +1,109 @@
 parser grammar Lapsang;
 
+
+class_declaration
+    : attribute_list* class_modifiers CLASS type_identifier type_parameter_list? parameter_list? base_list? type_parameter_constraint_clause* '{'? member_declaration* '}'? ';'?
+    ;
+
+class_modifiers
+    : class_visibility_override? class_partiality_override? class_concreteness_override?
+    ;
+
+class_visibility_override
+    : FILE
+    | PUBLIC
+    ;
+
+class_partiality_override
+    : PARTIAL
+    ;
+
+class_concreteness_override
+    : ABSTRACT
+    | CONST
+    | UNSEALED
+    ;
+
+type_identifier
+    : Capitalised_Identifier
+    | Escaped_Identifier
+    ;
+
+general_identifier
+    : Basic_Identifier
+    | Underscored_Identifier
+    ;
+
+fragment Escaped_Identifier
+    : '@' Basic_Identifier
+    ;
+
+fragment Capitalised_Identifier
+    : Capitalised_Identifier_Start_Character Identifier_Part_Character*
+    ;
+
+fragment Basic_Identifier
+    : Identifier_Start_Character Identifier_Part_Character*
+    ;
+
+fragment Underscored_Identifier
+    : Underscore_Character Identifier_Part_Character+
+    ;
+
+fragment Identifier_Start_Character
+    : Letter_Character
+    ;
+
+fragment Capitalised_Identifier_Start_Character
+    : Capilalised_Letter_Character
+    ;
+
+fragment Underscore_Character: '_';
+
+fragment Identifier_Part_Character
+    : Letter_Character
+    | Decimal_Digit_Character
+    | Connecting_Character
+    | Combining_Character
+    | Formatting_Character
+    ;
+
+fragment Letter_Character: [\p{Letter}\p{Letter_Number}];
+fragment Capilalised_Letter_Character: [\p{Uppercase_Letter}\p{Titlecase_Letter}];
+fragment Combining_Character: [\p{Non_Spacing_Mark}\p{Spacing_Combining_Mark}];
+fragment Decimal_Digit_Character: [\p{Decimal_Digit_Number}];
+fragment Connecting_Character: [\p{Connector_Punctuation}];
+fragment Formatting_Character: [\p{Format}];
+
+ABSTRACT: 'abstract';
+CLASS: 'class';
+CONST: 'const';
+FILE: 'file';
+PARTIAL: 'partial';
+PUBLIC: 'public';
+UNSEALED: 'unsealed';
+
+
+
+type_declaration
+  : class_declaration
+  // | interface_declaration
+  // | record_declaration
+  // | struct_declaration
+  ;
+
+
+identifier_token
+  : /* see lexical specification */
+  ;
+
 expression
    : block_expression
    | non_block_expression
    ;
 
 block_expression
-   : '{' terminated_statement+ non_block_expression? '}'
+   : '{' terminated_statement+ expression? '}'
    ;
 
 non_block_expression
